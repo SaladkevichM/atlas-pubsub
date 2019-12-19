@@ -4,13 +4,11 @@ package main
 // underlying messaging system.
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -18,8 +16,6 @@ import (
 
 	"github.com/infobloxopen/atlas-app-toolkit/health"
 	"github.com/infobloxopen/atlas-app-toolkit/server"
-	pubsub "github.com/infobloxopen/atlas-pubsub"
-	pubsubaws "github.com/infobloxopen/atlas-pubsub/aws"
 	pubsubgrpc "github.com/infobloxopen/atlas-pubsub/grpc"
 )
 
@@ -82,25 +78,9 @@ func NewLogger() *logrus.Logger {
 
 // newAWSPubSubServer creates a new grpc PubSub server using the broker
 // implementation for AWS
+// STUBBED
 func newAWSPubSubServer(logger *logrus.Logger) (pubsubgrpc.PubSubServer, error) {
-	sess, err := session.NewSession()
-	if err != nil {
-		return nil, err
-	}
-	// Checks to see if aws config credentials are valid
-	logger.Print("checking server for AWS permissions")
-	if err := pubsubaws.VerifyPermissions(sess); err != nil {
-		logger.Fatalf("AWS permissions check failed: %v", err)
-	}
-	logger.Print("server has proper AWS permissions")
-
-	pubFactory := func(ctx context.Context, topic string) (pubsub.Publisher, error) {
-		return pubsubaws.NewPublisher(sess, topic)
-	}
-	subFactory := func(ctx context.Context, topic, subscriptionID string) (pubsub.Subscriber, error) {
-		return pubsubaws.NewSubscriber(sess, topic, subscriptionID)
-	}
-	return pubsubgrpc.NewPubSubServer(pubFactory, subFactory), nil
+	return pubsubgrpc.NewPubSubServer(nil, nil), nil
 }
 
 // ServeInternal builds and runs the server that listens on InternalAddress

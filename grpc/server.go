@@ -35,19 +35,11 @@ type grpcWrapper struct {
 	subscriberFactory SubscriberFactory
 }
 
+// STUBBED
 func (s *grpcWrapper) Publish(ctx context.Context, req *PublishRequest) (*PublishResponse, error) {
-	p, err := s.publisherFactory(ctx, req.GetTopic())
-	if err != nil {
-		log.Printf("GRPC: error initializing publisher for topic %q: %v", req.GetTopic(), err)
-		return nil, err
-	}
-
-	if err := p.Publish(ctx, req.GetMessage(), req.GetMetadata()); err != nil {
-		log.Printf("GRPC: error publishing to topic %q: %v", req.GetTopic(), err)
-		return nil, err
-	}
-
-	log.Printf("GRPC: published to topic %q", req.GetTopic())
+	log.Printf("Dummy GRPC: published to topic %q", req.GetTopic())
+	log.Printf("Msg: %s", req.GetMessage())
+	log.Print("\n")
 	return &PublishResponse{}, nil
 }
 
